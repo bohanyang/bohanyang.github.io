@@ -7,7 +7,8 @@
 (function($) {
 
     var backgroundImageUrl = $('meta[name=background-image-url]').attr("content");
-    var backgroundImageCSS = 'url("assets/css/images/overlay.png"), url("' + backgroundImageUrl + '")';
+    var overlayImageUrl = $('meta[name=overlay-image-url]').attr("content");
+    var backgroundImageCSS = 'url("' + overlayImageUrl + '"), url("' + backgroundImageUrl + '")';
 
     var settings = {
 
