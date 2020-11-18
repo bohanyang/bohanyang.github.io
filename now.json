@@ -1,7 +1,7 @@
 {
     "headers": [
         {
-            "source": "/.*",
+            "source": "/(.*)",
             "headers": [
                 {
                     "key": "Strict-Transport-Security",
@@ -22,7 +22,7 @@
             ]
         },
         {
-            "source": "/assets/.*",
+            "source": "/assets/(.+)",
             "headers": [
                 {
                     "key": "Cache-Control",
