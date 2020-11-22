@@ -6,138 +6,110 @@
 
 (function($) {
 
-    var backgroundImageUrl = $('meta[name=background-image-url]').attr("content");
-    var overlayImageUrl = $('meta[name=overlay-image-url]').attr("content");
-    var backgroundImageCSS = 'url("' + overlayImageUrl + '"), url("' + backgroundImageUrl + '")';
+    var $window = $(window),
+        $body = $('body'),
+        $header = $('#header'),
+        $footer = $('#footer'),
+        $main = $('#main'),
+        settings = {
 
-    var settings = {
+            // Parallax background effect?
+                parallax: false,
 
-        // Parallax background effect?
-            parallax: false,
+            // Parallax factor (lower = more intense, higher = less intense).
+                parallaxFactor: 20
 
-        // Parallax factor (lower = more intense, higher = less intense).
-            parallaxFactor: 20
+        };
 
-    };
+    // Breakpoints.
+        breakpoints({
+            xlarge:  [ '1281px',  '1800px' ],
+            large:   [ '981px',   '1280px' ],
+            medium:  [ '737px',   '980px'  ],
+            small:   [ '481px',   '736px'  ],
+            xsmall:  [ null,      '480px'  ],
+        });
 
-    skel.breakpoints({
-        xlarge: '(max-width: 1800px)',
-        large: '(max-width: 1280px)',
-        medium: '(max-width: 980px)',
-        small: '(max-width: 736px)',
-        xsmall: '(max-width: 480px)'
-    });
+    // Play initial animations on page load.
+        $window.on('load', function() {
+            window.setTimeout(function() {
+                $body.removeClass('is-preload');
+            }, 100);
+        });
 
-    $(function() {
+    // Touch?
+        if (browser.mobile) {
 
-        var $window = $(window),
-            $body = $('body'),
-            $header = $('#header'),
-            $footer = $('#footer'),
-            $main = $('#main');
+            // Turn on touch mode.
+                $body.addClass('is-touch');
 
-        $header.css('background-image', backgroundImageCSS);
+            // Height fix (mostly for iOS).
+                window.setTimeout(function() {
+                    $window.scrollTop($window.scrollTop() + 1);
+                }, 0);
 
-        // Disable animations/transitions until the page has loaded.
-            $body.addClass('is-loading');
+        }
 
-            $window.on('load', function() {
-                $body.removeClass('is-loading');
-            });
+    // Footer.
+        breakpoints.on('<=medium', function() {
+            $footer.insertAfter($main);
+        });
 
-        // Touch?
-            if (skel.vars.mobile) {
+        breakpoints.on('>medium', function() {
+            $footer.appendTo($header);
+        });
 
-                // Turn on touch mode.
-                    $body.addClass('is-touch');
+    // Header.
 
-                // Height fix (mostly for iOS).
-                    window.setTimeout(function() {
-                        $window.scrollTop($window.scrollTop() + 1);
-                    }, 0);
+        // Parallax background.
+
+            // Disable parallax on IE (smooth scrolling is jerky), and on mobile platforms (= better performance).
+                if (browser.name == 'ie'
+                ||	browser.mobile)
+                    settings.parallax = false;
+
+            if (settings.parallax) {
+
+                breakpoints.on('<=medium', function() {
+
+                    $window.off('scroll.strata_parallax');
+                    $header.css('background-position', '');
+
+                });
+
+                breakpoints.on('>medium', function() {
+
+                    $header.css('background-position', 'left 0px');
+
+                    $window.on('scroll.strata_parallax', function() {
+                        $header.css('background-position', 'left ' + (-1 * (parseInt($window.scrollTop()) / settings.parallaxFactor)) + 'px');
+                    });
+
+                });
+
+                $window.on('load', function() {
+                    $window.triggerHandler('scroll');
+                });
 
             }
 
-        // Fix: Placeholder polyfill.
-            $('form').placeholder();
+    // Main Sections: Two.
 
-        // Prioritize "important" elements on medium.
-            skel.on('+medium -medium', function() {
-                $.prioritize(
-                    '.important\\28 medium\\29',
-                    skel.breakpoint('medium').active
-                );
+        // Lightbox gallery.
+        /*  $window.on('load', function() {
+                $('#two').poptrox({
+                    caption: function($a) { return $a.next('h3').text(); },
+                    overlayColor: '#2c2c2c',
+                    overlayOpacity: 0.85,
+                    popupCloserText: '',
+                    popupLoaderText: '',
+                    selector: '.work-item a.image',
+                    usePopupCaption: true,
+                    usePopupDefaultStyling: false,
+                    usePopupEasyClose: false,
+                    usePopupNav: true,
+                    windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+                });
             });
-
-        // Footer.
-            skel.on('+medium', function() {
-                $footer.insertAfter($main);
-                $footer.css('background-image', backgroundImageCSS);
-            });
-
-            skel.on('-medium !medium', function() {
-                $footer.appendTo($header);
-                $footer.css('background-image', 'none');
-            });
-
-        // Header.
-
-            // Parallax background.
-
-                // Disable parallax on IE (smooth scrolling is jerky), and on mobile platforms (= better performance).
-                    if (skel.vars.browser == 'ie'
-                    ||	skel.vars.mobile)
-                        settings.parallax = false;
-
-                if (settings.parallax) {
-
-                    skel.on('change', function() {
-
-                        if (skel.breakpoint('medium').active) {
-
-                            $window.off('scroll.strata_parallax');
-                            $header.css('background-position', 'top left, center center');
-
-                        }
-                        else {
-
-                            $header.css('background-position', 'left 0px');
-
-                            $window.on('scroll.strata_parallax', function() {
-                                $header.css('background-position', 'left ' + (-1 * (parseInt($window.scrollTop()) / settings.parallaxFactor)) + 'px');
-                            });
-
-                        }
-
-                    });
-
-                    $window.on('load', function() {
-                        $window.triggerHandler('scroll');
-                    });
-
-                }
-
-        // Main Sections: Two.
-
-            // Lightbox gallery.
-                /*$window.on('load', function() {
-
-                    $('#two').poptrox({
-                        caption: function($a) { return $a.next('h3').text(); },
-                        overlayColor: '#2c2c2c',
-                        overlayOpacity: 0.85,
-                        popupCloserText: '',
-                        popupLoaderText: '',
-                        selector: '.work-item a.image',
-                        usePopupCaption: true,
-                        usePopupDefaultStyling: false,
-                        usePopupEasyClose: false,
-                        usePopupNav: true,
-                        windowMargin: (skel.breakpoint('small').active ? 0 : 50)
-                    });
-
-                });*/
-
-    });
-
+        */
 })(jQuery);
