@@ -1,12 +1,17 @@
 [[headers]]
-    for = "/*"
+    for = '/*'
     [headers.values]
-        Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options = "nosniff"
-        X-Frame-Options = "SAMEORIGIN"
-        X-XSS-Protection = "1; mode=block"
+        Cache-Control = 'private, max-age=600, stale-while-revalidate=604800'
+        Strict-Transport-Security = 'max-age=31536000; includeSubDomains; preload'
+        X-Content-Type-Options = 'nosniff'
+        X-XSS-Protection = '0'
 
 [[headers]]
-    for = "/assets/*"
+    for = '/*/'
     [headers.values]
-        Cache-Control = "max-age=604800"
+        X-Frame-Options = 'SAMEORIGIN'
+
+[[headers]]
+    for = '/*.html'
+    [headers.values]
+        X-Frame-Options = 'SAMEORIGIN'
