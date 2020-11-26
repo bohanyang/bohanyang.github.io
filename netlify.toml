@@ -4,14 +4,5 @@
         Cache-Control = 'private, max-age=600, stale-while-revalidate=604800'
         Strict-Transport-Security = 'max-age=31536000; includeSubDomains; preload'
         X-Content-Type-Options = 'nosniff'
+        X-Frame-Options = 'SAMEORIGIN'
         X-XSS-Protection = '0'
-
-[[headers]]
-    for = '/:placeholder/'
-    [headers.values]
-        X-Frame-Options = 'SAMEORIGIN'
-
-[[headers]]
-    for = '/*.html'
-    [headers.values]
-        X-Frame-Options = 'SAMEORIGIN'
