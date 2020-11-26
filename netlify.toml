@@ -1,7 +1,7 @@
 [[headers]]
     for = '/*'
     [headers.values]
-        Cache-Control = 'private,max-age=600,stale-while-revalidate=604800'
+        Cache-Control = 'private, max-age=600, stale-while-revalidate=604800'
         Strict-Transport-Security = 'max-age=31536000; includeSubDomains; preload'
         X-Content-Type-Options = 'nosniff'
         X-XSS-Protection = '0'
