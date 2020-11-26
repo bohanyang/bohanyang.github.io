@@ -7,11 +7,6 @@
         X-XSS-Protection = '0'
 
 [[headers]]
-    for = '/*/'
-    [headers.values]
-        X-Frame-Options = 'SAMEORIGIN'
-
-[[headers]]
     for = '/*.html'
     [headers.values]
         X-Frame-Options = 'SAMEORIGIN'
