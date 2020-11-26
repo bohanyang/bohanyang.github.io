@@ -7,7 +7,7 @@
         X-XSS-Protection = '0'
 
 [[headers]]
-    for = '/*/'
+    for = '/:placeholder/'
     [headers.values]
         X-Frame-Options = 'SAMEORIGIN'
 
